@@ -17,7 +17,7 @@ require("./db/connect");
 
 let url;
 if (process.env.NODE_ENV === "production") {
-  url = "nolives.org";
+  url = "nolives.herokuapp.com";
 } else {
   url = "localhost:3000";
 }
