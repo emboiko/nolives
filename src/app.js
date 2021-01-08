@@ -49,7 +49,5 @@ if (process.env.NODE_ENV === "production") {
   https.createServer({
     key: fs.readFileSync("./config/server.key"),
     cert: fs.readFileSync("./config/server.cert")
-  }, app).listen(PORT, () => {
-    console.log(`Listening on port ${PORT}`)
-  });
+  }, app).listen(PORT, () => console.log(`Listening on port ${PORT}`));
 }
