@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require("path");
 const https = require("https");
+const cors = require("cors");
 const express = require("express");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
@@ -26,17 +27,12 @@ passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((obj, done) => done(null, obj));
 
 const app = express();
-
 app.use(cookieParser());
-app.use(session({
-  secret: "blizzard",
-  saveUninitialized: true,
-  resave: true
-}));
-
+app.use(session({ secret: "blizzard", saveUninitialized: true, resave: true }));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(helmet());
+app.use(cors());
 app.use(authRouter);
 
 if (process.env.NODE_ENV === "production") {

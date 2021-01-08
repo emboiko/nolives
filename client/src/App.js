@@ -1,15 +1,40 @@
+import React, { Component } from 'react';
+import fetch from "node-fetch";
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          No Lives.
-        </p>
-      </header>
-    </div>
-  );
-}
+export default class App extends Component {
+  constructor() {
+    super();
+    this.state = { user: null };
+  }
 
-export default App;
+  componentDidMount = async () => {
+    const res = await fetch("/auth/me");
+    const data = await res.json();
+    if (data.id || data.battletag) {
+      this.setState({ user: data })
+    }
+  }
+
+  render() {
+
+    if (this.state.user) {
+
+      return (
+        <>
+          <p>{this.state.user.battletag}</p>
+          <a href='/auth/logout'>Logout</a>
+        </>
+      );
+
+    } else {
+
+      return (
+        <>
+          <a href="/auth/bnet">Login</a>
+        </>
+      );
+
+    }
+  }
+}

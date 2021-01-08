@@ -7,13 +7,18 @@ authRouter.get("/auth/bnet", passport.authenticate("bnet"));
 
 authRouter.get(
   "/auth/bnet/callback",
-  passport.authenticate("bnet", { failureRedirect: "/" }),
-  (req, res) => res.redirect("/")
+  passport.authenticate("bnet", { failureRedirect: process.env.URL }),
+  (req, res) => res.redirect(process.env.URL)
 );
 
-authRouter.get("/logout", (req, res) => {
+authRouter.get("/auth/me", (req, res) => {
+  if (req.user) res.json(req.user)
+  else res.json({ user: null })
+});
+
+authRouter.get("/auth/logout", (req, res) => {
   req.logout();
-  res.redirect("/");
+  res.redirect(process.env.URL);
 });
 
 module.exports = authRouter;
