@@ -1,23 +1,15 @@
 const express = require("express");
-
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
-
 const passport = require("passport");
 const BnetStrategy = require("passport-bnet").Strategy;
-
-
-
 const helmet = require("helmet");
 const userRouter = require("./routes/userRouter");
-
 require("./db/connect");
-
-/////////////////////////////////////////////////////
 
 let url;
 if (process.env.NODE_ENV === "production") {
-  url = "nolives.herokuapp.com";
+  url = "nolives.herokuapp.com"; //todo
 } else {
   url = "localhost:3000";
 }
@@ -48,10 +40,8 @@ app.use(session({
 
 app.use(passport.initialize());
 app.use(passport.session());
-
 app.use(helmet());
 app.use(userRouter);
-
 
 
 app.get("/", (req, res) => {
