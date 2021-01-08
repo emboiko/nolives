@@ -1,3 +1,5 @@
+const https = require("https");
+const fs = require('fs');
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
@@ -72,4 +74,10 @@ app.get("/logout", (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
+// app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
+https.createServer({
+  key: fs.readFileSync("./config/server.key"),
+  cert: fs.readFileSync("./config/server.cert")
+}, app).listen(PORT, () => {
+  console.log(`Listening on port ${PORT}`)
+});
