@@ -74,10 +74,14 @@ app.get("/logout", (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-// app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
-https.createServer({
-  key: fs.readFileSync("./config/server.key"),
-  cert: fs.readFileSync("./config/server.cert")
-}, app).listen(PORT, () => {
-  console.log(`Listening on port ${PORT}`)
-});
+
+if (process.env.NODE_ENV === "production") {
+  app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
+} else {
+  https.createServer({
+    key: fs.readFileSync("./config/server.key"),
+    cert: fs.readFileSync("./config/server.cert")
+  }, app).listen(PORT, () => {
+    console.log(`Listening on port ${PORT}`)
+  });
+}
