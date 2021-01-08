@@ -1,20 +1,18 @@
-const https = require("https");
 const fs = require('fs');
+const https = require("https");
 const express = require("express");
-const cookieParser = require("cookie-parser");
 const session = require("express-session");
+const cookieParser = require("cookie-parser");
+const helmet = require("helmet");
 const passport = require("passport");
 const BnetStrategy = require("passport-bnet").Strategy;
-const helmet = require("helmet");
-const userRouter = require("./routes/userRouter");
+const authRouter = require("./routes/authRouter");
 require("./db/connect");
 
+const PORT = process.env.PORT || 5000;
 let url;
-if (process.env.NODE_ENV === "production") {
-  url = "nolives.herokuapp.com"; //todo
-} else {
-  url = "localhost:3000";
-}
+if (process.env.NODE_ENV === "production") url = "nolives.herokuapp.com";
+else url = `localhost:${PORT}`;
 
 passport.use(new BnetStrategy({
   clientID: process.env.BNET_ID,
@@ -23,13 +21,8 @@ passport.use(new BnetStrategy({
   scope: "wow.profile",
 }, (accessToken, refreshToken, profile, done) => done(null, profile)));
 
-passport.serializeUser(function (user, done) {
-  done(null, user);
-});
-
-passport.deserializeUser(function (obj, done) {
-  done(null, obj);
-});
+passport.serializeUser((user, done) => done(null, user));
+passport.deserializeUser((obj, done) => done(null, obj));
 
 const app = express();
 
@@ -43,39 +36,13 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(helmet());
-app.use(userRouter);
-
-
-app.get("/", (req, res) => {
-  if (req.isAuthenticated()) {
-
-    let output = "<h1>Express OAuth Test</h1>" + req.user.id + "<br>";
-    if (req.user.battletag) output += req.user.battletag + "<br>";
-    output += "<a href='/logout'>Logout</a>";
-
-    res.send(output);
-  } else {
-    res.send("<h1>Express OAuth Test</h1>" +
-      "<a href='/auth/bnet'>Login with Bnet</a>");
-  }
-});
-
-app.get("/auth/bnet", passport.authenticate("bnet"));
-
-app.get(
-  "/auth/bnet/callback",
-  passport.authenticate("bnet", { failureRedirect: "/" }),
-  (req, res) => res.redirect("/")
-);
-
-app.get("/logout", (req, res) => {
-  req.logout();
-  res.redirect("/");
-});
-
-const PORT = process.env.PORT || 3000;
+app.use(authRouter);
 
 if (process.env.NODE_ENV === "production") {
+  app.use(express.static("client/build"));
+  app.get("/*", (req, res) => {
+    res.sendFile(path.join(__dirname, "../client/build/index.html"));
+  });
   app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
 } else {
   https.createServer({
