@@ -26,7 +26,7 @@ passport.use(new BnetStrategy({
   clientID: process.env.BNET_ID,
   clientSecret: process.env.BNET_SECRET,
   callbackURL: `https://${url}/auth/bnet/callback`,
-  region: "us"
+  scope: "wow.profile sc2.profile",
 }, (accessToken, refreshToken, profile, done) => done(null, profile)));
 
 passport.serializeUser(function (user, done) {
