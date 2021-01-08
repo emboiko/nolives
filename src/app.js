@@ -26,7 +26,7 @@ passport.use(new BnetStrategy({
   clientID: process.env.BNET_ID,
   clientSecret: process.env.BNET_SECRET,
   callbackURL: `https://${url}/auth/bnet/callback`,
-  scope: "wow.profile sc2.profile",
+  scope: "wow.profile",
 }, (accessToken, refreshToken, profile, done) => done(null, profile)));
 
 passport.serializeUser(function (user, done) {
@@ -57,7 +57,7 @@ app.use(userRouter);
 app.get("/", (req, res) => {
   if (req.isAuthenticated()) {
 
-    const output = "<h1>Express OAuth Test</h1>" + req.user.id + "<br>";
+    let output = "<h1>Express OAuth Test</h1>" + req.user.id + "<br>";
     if (req.user.battletag) output += req.user.battletag + "<br>";
     output += "<a href='/logout'>Logout</a>";
 
