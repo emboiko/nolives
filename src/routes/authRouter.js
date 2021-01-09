@@ -12,8 +12,8 @@ authRouter.get(
 );
 
 authRouter.get("/auth/me", (req, res) => {
-  if (req.user) res.json(req.user)
-  else res.json({ user: null })
+  if (req.user) res.json(req.user);
+  else res.json({ user: null });
 });
 
 authRouter.get("/auth/logout", (req, res) => {
