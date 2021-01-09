@@ -28,7 +28,7 @@ passport.deserializeUser((obj, done) => done(null, obj));
 
 const app = express();
 app.use(cookieParser());
-app.use(session({ secret: "blizzard", saveUninitialized: true, resave: true }));
+app.use(session({ secret: process.env.BLIZZ_SECRET, saveUninitialized: true, resave: true }));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(helmet());

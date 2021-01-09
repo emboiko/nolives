@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import fetch from "node-fetch";
+import ProtectedRoute from "./components/router/ProtectedRoute";
 import Header from "./components/Header";
 import Landing from "./components/Landing";
+import Dashboard from "./components/Dashboard";
 import './App.css';
 
 export default class App extends Component {
@@ -28,6 +30,12 @@ export default class App extends Component {
               exact
               path="/"
               render={routeProps => <Landing {...routeProps} user={this.state.user} />}
+            />
+            <ProtectedRoute
+              exact
+              path="/dashboard"
+              user={this.state.user}
+              render={routeProps => <Dashboard {...routeProps} user={this.state.user} />}
             />
           </Switch>
         </BrowserRouter>
