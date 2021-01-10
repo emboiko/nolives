@@ -3,11 +3,19 @@ import React, { Component } from 'react';
 import '../App.css';
 
 export default class Landing extends Component {
+  componentDidMount = async () => {
+    if (this.props.user) {
+      const res = await fetch("/user/profile");
+      const data = await res.json();
+      console.log(data);
+    }
+  }
+
   render() {
     if (this.props.user) {
       return (
         <>
-          <p>User in landing: {this.props.user.battletag}</p>
+          <p>{this.props.user.battletag}</p>
         </>
       );
 

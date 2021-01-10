@@ -9,7 +9,7 @@ const helmet = require("helmet");
 const passport = require("passport");
 const BnetStrategy = require("passport-bnet").Strategy;
 const authRouter = require("./routes/authRouter");
-const validateRouter = require("./routes/validateRouter");
+const userRouter = require("./routes/userRouter");
 require("./db/connect");
 
 const PORT = process.env.PORT || 5000;
@@ -35,7 +35,7 @@ app.use(passport.session());
 app.use(helmet());
 app.use(cors());
 app.use(authRouter);
-app.use(validateRouter);
+app.use(userRouter);
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
