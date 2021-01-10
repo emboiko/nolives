@@ -10,6 +10,8 @@ export default class Landing extends Component {
 
   componentDidMount = async () => {
     if (this.props.user) {
+      // Anywhere we need to reach out to blizzard, proxy it
+      // through the backend
       const res = await fetch("/user/profile");
       const data = await res.json();
       this.setState({ profile: data });
@@ -18,9 +20,7 @@ export default class Landing extends Component {
   }
 
   handleClick = async (e) => {
-    const res = await fetch(e.target.dataset.href, {
-      method: "POST"
-    });
+    const res = await fetch(e.target.dataset.href, { method: "POST" });
     console.log(await res.json());
   }
 
@@ -30,10 +30,11 @@ export default class Landing extends Component {
         console.log(this.state.profile);
 
         let characters = [];
-
         this.state.profile.wow_accounts.forEach((account) => {
           account.characters.forEach((character) => {
 
+            // Just about every piece of data that's needed for 
+            // any API request is here except for the user's token
             characters.push({
               name: character.name,
               id: character.id,
@@ -47,6 +48,7 @@ export default class Landing extends Component {
           });
         })
 
+        // Here's one easy way to create some JSX out of the characters array:
         const jsxCharacters = characters.map((character, i) => {
           return (
             <div key={i}>
@@ -55,7 +57,7 @@ export default class Landing extends Component {
                 data-href={
                   `/user/register?realmId=${character.realm.id}` +
                   `&characterId=${character.id}` +
-                  `&realmSlug=${character.realm.name}` +
+                  `&realmName=${character.realm.name}` +
                   `&characterName=${character.name}`
                 }
                 onClick={this.handleClick}
@@ -69,6 +71,7 @@ export default class Landing extends Component {
         return (
           <>
             <h3>Characters:</h3>
+            {/* Then just place the JSX in the markup like so */}
             {jsxCharacters}
           </>
         );

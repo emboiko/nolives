@@ -24,6 +24,7 @@ export default class App extends Component {
         <BrowserRouter>
           <Header user={this.state.user} />
           <Switch>
+            {/* There's a private route available in ./components as well */}
             <Route
               exact
               path="/"
